@@ -1,0 +1,22 @@
+{
+  "fly_up": {
+    "subtitle": "sounds.flyman.fly_up",
+    "sounds": [
+      "flyman:da_zui_ba_zi_hu_si_ni",
+      "flyman:hei_shou",
+      "flyman:zhuang_bi_wo_rang_ni_fei_qi_lai"
+    ]
+  },
+  "man": {
+    "subtitle": "sounds.flyman.man",
+    "sounds": [
+      "flyman:man"
+    ]
+  },
+  "hahaha": {
+    "subtitle": "sounds.flyman.hahaha",
+    "sounds": [
+      "flyman:hahaha"
+    ]
+  }
+}
