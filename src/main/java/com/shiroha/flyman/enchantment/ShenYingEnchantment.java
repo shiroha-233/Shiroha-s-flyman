@@ -13,7 +13,10 @@ import net.minecraft.world.item.Items;
 public class ShenYingEnchantment extends Enchantment {
     
     public ShenYingEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        // 支持武器和盔甲，可以附魔在主手武器和所有盔甲部位
+        super(Rarity.RARE, EnchantmentCategory.BREAKABLE, new EquipmentSlot[]{
+            EquipmentSlot.MAINHAND, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
+        });
     }
     
     @Override
@@ -23,7 +26,7 @@ public class ShenYingEnchantment extends Enchantment {
     
     @Override
     public int getMaxLevel() {
-        return 3; // 附魔最高等级为3
+        return 5; // 附魔最高等级为5
     }
     
     @Override
@@ -56,20 +59,22 @@ public class ShenYingEnchantment extends Enchantment {
     
     @Override
     public void doPostAttack(LivingEntity attacker, Entity target, int level) {
-        // 当攻击目标时触发效果
+        // 武器主动攻击效果：当攻击目标时触发效果
         if (!attacker.level().isClientSide() && target instanceof LivingEntity) {
+            // 关键防误触发：仅当主手物品实际带有本附魔时才生效
+            int heldLevel = net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(
+                    ModEnchantments.SHEN_YING.get(), attacker.getMainHandItem());
+            if (heldLevel <= 0) {
+                return;
+            }
+            
             LivingEntity livingTarget = (LivingEntity) target;
             
             // 检查是否是木棍，如果是则不造成伤害
             boolean isStick = attacker.getMainHandItem().getItem() == Items.STICK;
             
-            // 根据附魔等级计算击飞高度
-            // 调整后：
-            // 1级：飞行高度约10格
-            // 2级：飞行高度约15格
-            // 3级：飞行高度约20格
-            // 调整飞行高度值以适应Minecraft的物理系统
-            float upwardVelocity = 0.75F + (level * 0.5F); // 调整后的向上速度
+            // 根据附魔等级计算击飞高度（使用实际持有等级）
+            float upwardVelocity = 0.75F + (heldLevel * 0.5F); // 武器攻击的击飞效果更强
             
             // 给目标一个向上的速度，使其飞起来
             livingTarget.setDeltaMovement(new Vec3(
@@ -80,7 +85,7 @@ public class ShenYingEnchantment extends Enchantment {
             livingTarget.hurtMarked = true; // 标记实体需要更新速度
             
             // 检查是否已播放起飞音效，防止重复播放
-            if (!attacker.getPersistentData().getBoolean("fly_up_played")) {
+            if (!attacker.getPersistentData().getBoolean("weapon_fly_up_played")) {
                 // 播放飞起来的音效
                 livingTarget.level().playSound(
                     null, // 不指定特定玩家
@@ -92,15 +97,16 @@ public class ShenYingEnchantment extends Enchantment {
                 );
                 
                 // 标记音效已播放
-                attacker.getPersistentData().putBoolean("fly_up_played", true);
+                attacker.getPersistentData().putBoolean("weapon_fly_up_played", true);
                 
                 // 设置延迟重置标记，避免影响后续攻击
-                attacker.getPersistentData().putInt("fly_up_reset_timer", 20); // 1秒后重置(20 ticks)
+                attacker.getPersistentData().putInt("weapon_fly_up_reset_timer", 20); // 1秒后重置(20 ticks)
             }
             
             // 如果不是木棍，则在目标落地时造成额外伤害
             if (!isStick) {
-                float healthPercentage = 0.3F + (level * 0.3F); // 生命值百分比伤害
+                // 平衡伤害计算：1级5%，2级10%，3级15%，4级20%，5级25%（使用实际持有等级）
+                float healthPercentage = heldLevel * 0.05F; // 每级5%生命值伤害
                 
                 // 创建一个任务，在目标落地时造成额外伤害
                 livingTarget.getPersistentData().putBoolean("shen_ying_falling", true);

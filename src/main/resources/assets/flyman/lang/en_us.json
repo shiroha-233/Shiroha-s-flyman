@@ -1,6 +1,6 @@
 {
   "enchantment.flyman.shen_ying": "Divine Eagle",
-  "enchantment.flyman.shen_ying.desc": "Causes monsters to fly up and then fall, taking massive fall damage. When applied to a stick, only launches monsters without causing additional damage.",
+  "enchantment.flyman.shen_ying.desc": "Universal enchantment. Weapon: launches targets on attack with fall damage, stick only launches without damage. Armor: launches attackers when hit, multiple armor pieces stack effects.",
   "sounds.flyman.fly_up": "Fly up",
   "sounds.flyman.man": "man",
   "sounds.flyman.hahaha": "hahaha"

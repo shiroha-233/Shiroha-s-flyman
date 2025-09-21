@@ -1,6 +1,6 @@
 {
   "enchantment.flyman.shen_ying": "神鹰",
-  "enchantment.flyman.shen_ying.desc": "使怪物飞起然后坠落，造成大量坠落伤害。当附在木棍上时，只击飞怪物不造成额外伤害。",
+  "enchantment.flyman.shen_ying.desc": "万能附魔。武器：攻击时使目标飞起并坠落受伤，木棍只击飞不伤害。盔甲：受攻击时使攻击者飞起坠落，多件盔甲等级叠加。",
   "sounds.flyman.fly_up": "飞起来",
   "sounds.flyman.man": "man",
   "sounds.flyman.hahaha": "hahaha"
